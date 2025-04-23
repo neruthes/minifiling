@@ -204,7 +204,6 @@ case "$SUBCOMMAND" in
             done
             printf ',,,]'
         ) | sed 's/,,,,//' | jq -r . > files/catalog.json
-        # cat files/catalog.json
         cp -a "$CATALOG_HTML_PATH" "$INDEX_HTML_TARGET_PATH"
         ;;
 esac
