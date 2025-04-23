@@ -8,9 +8,9 @@ Tool for collecting files into archive.
 - Files are collected into a timeline.
 - Use a directory as archive timeline namespace.
 - Importing a file will generate an evidence of collection (EOC) for its hash.
-- Generate EOC PDF...?
+- Generate EOC PDF (Certificate of Digital File Identification).
 - Easy lookup by hash, especially over HTTP.
-
+- IPFS backend in future...?
 
 
 ## Installation
