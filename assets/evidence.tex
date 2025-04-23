@@ -5,6 +5,7 @@
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \usepackage{tgheros}
+\usepackage[hidelinks]{hyperref}
 
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{8pt}
@@ -14,26 +15,41 @@
 
 \begin{document}
 \begin{center}
-    \Large
-    Certificate of Digital File Identification
+    \fontspec{Instrument Serif}%
+    \Huge\bfseries%
+    {Certificate of Digital File Identification}
 \end{center}
+\bigskip
+\bigskip
+\sloppy
 
 This is to certify that the website has received a file
 which is identifiable with the following characteristics.
 \bigskip
 
 
-Filename:\\
-{\sffamily\large\bfseries\METADATAbasename}
+Filename:
+
+{\sffamily\Large\bfseries\strut\METADATAbasename}
 \bigskip
 
-SHA-1 Hash:\\
-{\sffamily\METADATAhash}
+
+
+SHA-1 Hash:
+
+{\sffamily\strut\METADATAhash}
 \bigskip
 
-How to get file:\\
-{\sffamily\METADATAurlbyhash}
+
+
+How to get file:
+
+% {\sffamily\strut\METADATAurlbyhash}
+{\sffamily\strut\href{\METADATAurlbyhash}{\METADATAurlbyhash}}
 \bigskip
+\bigskip
+
+
 
 \qrcode[height=32mm]{\METADATAurlbyhash}
 
@@ -41,8 +57,8 @@ How to get file:\\
 
 \vfill
 
-Time: \METADATAtimeiso\\
-UNIX Timestamp: \METADATAtimestamp
+Time: \strut\METADATAtimeiso\\
+UNIX Timestamp: \strut\METADATAtimestamp
 
 \end{document}
 

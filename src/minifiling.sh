@@ -5,12 +5,7 @@
 # Source code: https://github.com/neruthes/minifiling
 
 
-### Real env
-# ENABLE_XELATEX_EVIDENCE
 
-
-### Flags inferred from env
-[[ -n "$ENABLE_XELATEX_EVIDENCE" ]] && enabled_evidence_pdf=true
 
 
 ### Installer should replace values for these
@@ -28,10 +23,18 @@ TIME_ISO="$(TZ=UTC date -Is | cut -c1-19)Z"
 SITE_PREFIX="http://example.com"
 ASSETS_DIR="$SRC_REPO_PATH/assets"
 ITEM_METADATA_HTML_PATH="$ASSETS_DIR/item_metadata.html"
+CATALOG_HTML_PATH="$ASSETS_DIR/catalog.html"
+INDEX_HTML_TARGET_PATH=files/index.html
 ASSET_EVIDENCE_TEX_PATH="$ASSETS_DIR/evidence.tex"
 ASSET_EVIDENCE_TEXDEPS_PATH="$ASSETS_DIR/evidence.tex.d"
 [[ -e .env ]] && source .env
 
+
+### Real env variables...
+# ENABLE_XELATEX_EVIDENCE
+
+### Flags inferred from env
+[[ -n "$ENABLE_XELATEX_EVIDENCE" ]] && enabled_evidence_pdf=true
 
 
 ### Global variables to be filled by some subcommands
@@ -129,7 +132,6 @@ function finish_importing() {
     ### Generate evidence
     if [[ -n "$ENABLE_XELATEX_EVIDENCE" ]] && [[ $ENABLE_XELATEX_EVIDENCE != false ]]; then
         xelatex_make_evidence_pdf "$dir2"
-        
     fi
 }
 
@@ -156,6 +158,8 @@ function xelatex_make_evidence_pdf() {
     rm zzz*
     rm evidence-data.tex
     rm -r evidence.tex.d
+    realpath "file_$IMPORTED_HASH.pdf"
+    echo "[INFO] WWW path: $SITE_PREFIX/hash/${IMPORTED_HASH:0:2}/$IMPORTED_HASH/ "
 }
 
 
@@ -183,12 +187,25 @@ SUBCOMMAND="$1"
 case "$SUBCOMMAND" in
     import | i )
         try_import_file "$2"
-        # cert | make_evidence_pdf )
-        # dir2="$WSPATH/files/hash/${IMPORTED_HASH:0:2}/$IMPORTED_HASH"
         ;;
+
     files/hash/*/*/ )
         if [[ -e "$1"metadata.json ]]; then
             xelatex_make_evidence_pdf "$(realpath "$1")"
         fi
         ;;
+
+    index )
+        (
+            echo '['
+            find files/id -name metadata.json | sort -ru | while read -r json_fn; do
+                cat "$json_fn"
+                printf ','
+            done
+            printf ',,,]'
+        ) | sed 's/,,,,//' | jq -r . > files/catalog.json
+        # cat files/catalog.json
+        cp -a "$CATALOG_HTML_PATH" "$INDEX_HTML_TARGET_PATH"
+        ;;
 esac
+

@@ -56,11 +56,16 @@ minifiling.sh find f7579c9b451c1054fc5bb48435841bb639fac763
 
 ## Supported ENV
 
-| Env                     | Description                                      |
-| ----------------------- | ------------------------------------------------ |
-| ENABLE_XELATEX_EVIDENCE | Set empty or false to disable. Others mean true. |
-| SITE_PREFIX             | Supply a string for PDF links.                   |
-
+| Env                         | Description                                                |
+| --------------------------- | ---------------------------------------------------------- |
+| ENABLE_XELATEX_EVIDENCE     | Set empty or false to disable. Others mean true.           |
+| SITE_PREFIX                 | Supply a string for PDF links.                             |
+| ASSETS_DIR                  | Where to find static assets, generally.                    |
+| ITEM_METADATA_HTML_PATH     | Path of alternative file for `assets/item_metadata.html`.  |
+| CATALOG_HTML_PATH           | Path of alternative file for `assets/catalog.html`.        |
+| INDEX_HTML_TARGET_PATH      | Install `catalog.html` into a different path.              |
+| ASSET_EVIDENCE_TEX_PATH     | Path of alternative file for `assets/evidence.tex`.        |
+| ASSET_EVIDENCE_TEXDEPS_PATH | Path of alternative directory for `assets/evidence.tex.d`. |
 
 
 

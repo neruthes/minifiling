@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site Catalog</title>
+    <style>
+        /* Presets and utilities */
+        html,
+        body {
+            font-size: 14px;
+        }
+
+        .sans {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif, 'Noto Sans CJK SC';
+        }
+
+        .serif {
+            font-family: 'TeX Gyre Schola', 'C059', 'Nimbus Roman', 'Georgia', 'Times New Roman', 'Times', serif, 'Noto Serif CJK SC';
+        }
+
+        .wrapper {
+            max-width: 800px;
+            padding: 20px;
+            margin: 0 auto;
+        }
+
+        tr td:nth-child(2) {
+            padding-left: 12px;
+        }
+
+
+
+
+
+        /* Components */
+        .big_download_btn {
+            display: inline-block;
+            font-size: 1.5rem;
+            background-color: #16E;
+            color: white !important;
+            padding: 6px 12px;
+            border-radius: 7px;
+            text-decoration: none !important;
+        }
+
+        .site-header {
+            padding: 40px 0;
+            margin: 0 0 60px;
+            border-bottom: 1px solid #DDD;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper sans">
+        <div>
+            <header class="site-header">
+                <h1>Site Catalog</h1>
+            </header>
+        </div>
+        <div class="main-content">
+            <div>
+                <div id="MainList"></div>
+                <div>
+                    
+                </div>
+            </div>
+        </div>
+        <div>
+            <footer>
+                <p>Powered by <a href="https://github.com/neruthes/minifiling">MiniFiling</a></p>
+            </footer>
+        </div>
+    </div>
+    <script>
+        (function () {
+            let xhr = new XMLHttpRequest();
+            xhr.open('GET', './catalog.json');
+            xhr.send();
+            xhr.onload = function () {
+                window.catalog_arr = JSON.parse(xhr.responseText);
+                console.log(catalog_arr);
+                document.querySelector('#MainList').innerHTML = catalog_arr.map(function (data_obj) {
+                    return `<div style="padding: 20px 0px; border-bottom: 1px solid #DDD; margin: 0px;">
+                        <h2><a href="./hash/${data_obj.hash.slice(0,2)}/${data_obj.hash}/">${data_obj.basename}</a></h2>
+                        <p>SHA-1 Hash: ${data_obj.hash}</p>
+                        <p>Date: ${data_obj.timeiso.replace('T', ' ')}</p>
+                    </div>`;
+                }).join('\n');
+            };
+        })();
+    </script>
+</body>
+
+</html>

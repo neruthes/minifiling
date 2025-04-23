@@ -1,5 +1,6 @@
-<html lang="en">
+<!DOCTYPE html>
 
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -53,7 +54,7 @@
 </head>
 
 <body>
-    <div class="wrapper">
+    <div class="wrapper sans">
         <div>
             <header class="site-header">
                 <h1>Certificate of Digital File Identification</h1>
@@ -79,7 +80,6 @@
         (function () {
             let xhr = new XMLHttpRequest();
             xhr.open('GET', 'metadata.json');
-            xhr.send();
             xhr.onload = function () {
                 window.data_obj = JSON.parse(xhr.responseText);
                 console.log(data_obj);
@@ -112,7 +112,6 @@
                             ${dom_optional_evidence_link}
                         </tbody>
                     </table>
-                    
                 `;
             };
             xhr.send();
