@@ -113,8 +113,10 @@ function finish_importing() {
     printf '{
         "hash": "%s",
         "basename": "%s",
+        "timestamp": "%s",
+        "timeiso": "%s",
         "enabled_evidence_pdf": "%s"
-    }' "$IMPORTED_HASH" "$IMPORTED_BASENAME" "$enabled_evidence_pdf" > "$SESSION_DIR/metadata.json"
+    }' "$IMPORTED_HASH" "$IMPORTED_BASENAME" "$TIMESTAMP" "$TIME_ISO" "$enabled_evidence_pdf" > "$SESSION_DIR/metadata.json"
     ### Put into '/files' dir
     cd "$WSPATH"
     dir1="$WSPATH/files/id/$YEAR/$TIMESTAMP"
@@ -126,26 +128,35 @@ function finish_importing() {
     rm -r "$dir1/raw"
     ### Generate evidence
     if [[ -n "$ENABLE_XELATEX_EVIDENCE" ]] && [[ $ENABLE_XELATEX_EVIDENCE != false ]]; then
-        cd "$dir2"
-        cp "$ASSET_EVIDENCE_TEX_PATH"  "zzz_file_$IMPORTED_HASH.tex"
-        cp -r "$ASSET_EVIDENCE_TEXDEPS_PATH"  evidence.tex.d
-        (
-            printf '\\providecommand{\\METADATAhash}[0]{%s}\n'          "$(jq -r .hash metadata.json)"
-            printf '\\providecommand{\\METADATAtimestamp}[0]{%s}\n'     "$TIMESTAMP"
-            printf '\\providecommand{\\METADATAtimeiso}[0]{%s}\n'       "$TIME_ISO"
-            printf '\\providecommand{\\METADATAbasename}[0]{%s}\n'      "$(jq -r .basename metadata.json)"
-            printf '\\providecommand{\\METADATAsiteprefix}[0]{%s}\n'    "$SITE_PREFIX"
-            printf '\\providecommand{\\METADATAurlbyid}[0]{%s}\n'       "$SITE_PREFIX/id/$YEAR/$TIMESTAMP/"
-            printf '\\providecommand{\\METADATAurlbyhash}[0]{%s}\n'     "$SITE_PREFIX/hash/${IMPORTED_HASH:0:2}/$IMPORTED_HASH/"
-        ) > evidence-data.tex
-        xelatex "zzz_file_$IMPORTED_HASH.tex"
-        mv "zzz_file_$IMPORTED_HASH.pdf" "file_$IMPORTED_HASH.pdf"
-        rm zzz*
-        rm evidence-data.tex
-        rm -r evidence.tex.d
+        xelatex_make_evidence_pdf "$dir2"
+        
     fi
 }
 
+function xelatex_make_evidence_pdf() {
+    echo '(xelatex_make_evidence_pdf)'
+    dir2="$1"
+    IMPORTED_HASH="$(basename "$dir2")"
+    echo "dir2=$dir2"
+    echo "IMPORTED_HASH=$IMPORTED_HASH"
+    cd "$dir2"
+    cp "$ASSET_EVIDENCE_TEX_PATH"  "zzz_file_$IMPORTED_HASH.tex"
+    cp -r "$ASSET_EVIDENCE_TEXDEPS_PATH"  evidence.tex.d
+    (
+        printf '\\providecommand{\\METADATAhash}[0]{%s}\n'          "$(jq -r .hash metadata.json)"
+        printf '\\providecommand{\\METADATAtimestamp}[0]{%s}\n'     "$(jq -r .timestamp metadata.json)"
+        printf '\\providecommand{\\METADATAtimeiso}[0]{%s}\n'       "$(jq -r .timeiso metadata.json)"
+        printf '\\providecommand{\\METADATAbasename}[0]{%s}\n'      "$(jq -r .basename metadata.json)"
+        printf '\\providecommand{\\METADATAsiteprefix}[0]{%s}\n'    "$SITE_PREFIX"
+        printf '\\providecommand{\\METADATAurlbyid}[0]{%s}\n'       "$SITE_PREFIX/id/$YEAR/$TIMESTAMP/"
+        printf '\\providecommand{\\METADATAurlbyhash}[0]{%s}\n'     "$SITE_PREFIX/hash/${IMPORTED_HASH:0:2}/$IMPORTED_HASH/"
+    ) > evidence-data.tex
+    xelatex "zzz_file_$IMPORTED_HASH.tex"
+    mv "zzz_file_$IMPORTED_HASH.pdf" "file_$IMPORTED_HASH.pdf"
+    rm zzz*
+    rm evidence-data.tex
+    rm -r evidence.tex.d
+}
 
 
 
@@ -172,4 +183,12 @@ SUBCOMMAND="$1"
 case "$SUBCOMMAND" in
     import | i )
         try_import_file "$2"
+        # cert | make_evidence_pdf )
+        # dir2="$WSPATH/files/hash/${IMPORTED_HASH:0:2}/$IMPORTED_HASH"
+        ;;
+    files/hash/*/*/ )
+        if [[ -e "$1"metadata.json ]]; then
+            xelatex_make_evidence_pdf "$(realpath "$1")"
+        fi
+        ;;
 esac

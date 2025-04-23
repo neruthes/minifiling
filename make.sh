@@ -14,7 +14,7 @@ case "$1" in
 
         _dev_ci_hook
         ;;
-    _test )
+    _test | _test/ )
         ### Simple test case
         cd data/minifiling.neruthes.xyz &&
         rm -r .tmp files/{id,hash}

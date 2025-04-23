@@ -24,30 +24,20 @@ Tool for collecting files into archive.
 
 ### Initialize Archive
 
-```
-minifiling init
-```
+Just pick a directory. No explicit init is needed.
 
 ### Import File
 
 ```sh
-minifiling import http://.../file.pdf       # Online file
-minifiling import /path/to/local/file.pdf   # Local file
+minifiling.sh import http://.../file.pdf       # Online file
+minifiling.sh import /path/to/local/file.pdf   # Local file
 ```
 
-### Find File by Hash
+### Find File by Hash (TODO)
 
 ```sh
-minifiling find f7579c9b451c1054fc5bb48435841bb639fac763
+minifiling.sh find f7579c9b451c1054fc5bb48435841bb639fac763
 ```
-
-### Export Static Website
-
-```sh
-minifiling www
-```
-
-
 
 
 
@@ -58,10 +48,18 @@ minifiling www
 - `/files/id/2025/1745384870592/`
 - `/files/hash/f7/f7579c9b451c1054fc5bb48435841bb639fac763/`
 - `/files/{ id... | hash... }/index.html` Human readable metadata
-- `/files/{ id... | hash... }/file_f7579c9b451c1054fc5bb48435841bb639fac763.pdf` EOC PDF
-- `/files/{ id... | hash... }/raw/RAWFN.pdf` Original file
+- `/files/{ hash... }/file_f7579c9b451c1054fc5bb48435841bb639fac763.pdf` Certificate of Digital File Identification PDF
+- `/files/{ hash... }/raw/RAWFN.pdf` Original file
 
 
+
+
+## Supported ENV
+
+| Env                     | Description                                      |
+| ----------------------- | ------------------------------------------------ |
+| ENABLE_XELATEX_EVIDENCE | Set empty or false to disable. Others mean true. |
+| SITE_PREFIX             | Supply a string for PDF links.                   |
 
 
 
