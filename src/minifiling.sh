@@ -211,5 +211,30 @@ case "$SUBCOMMAND" in
         ) | sed 's/,,,,//' | jq -r . > files/catalog.json
         cp -a "$CATALOG_HTML_PATH" "$INDEX_HTML_TARGET_PATH"
         ;;
+
+    fix_detail_html_symlinks )
+        (
+            ### Existing index.html symlinks
+            find files -maxdepth 4 -mindepth 4 -type l -name index.html
+            ### Missing index.html symlink slots
+            (
+                find files/hash -maxdepth 2 -mindepth 2 -type d
+                find files/id -maxdepth 2 -mindepth 2 -type d
+            ) | while read -r dir; do
+                echo "$dir/index.html"
+            done
+
+        ) | while read -r symlink_path_raw; do
+            cd "$WSPATH"
+            symlink_path="$symlink_path_raw"
+            echo "symlink_path=$symlink_path"
+            rm "$symlink_path" || :
+            src_realpath="$(realpath .item_metadata.html.txt)"
+            dirname="$(dirname "$symlink_path")"
+            cd "$dirname"
+            ln -svf "$(realpath "$src_realpath" --relative-to "$PWD")" ./index.html
+            # ln -svf "$(realpath .item_metadata.html.txt --relative-to "$(dirname "$symlink_path")")" "$symlink_path"
+        done
+        ;;
 esac
 

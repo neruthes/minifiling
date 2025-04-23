@@ -86,6 +86,12 @@
                 let rfp_prefix = ''; // Default value
                 if (!location.pathname.startsWith('/hash/') || !location.pathname.startsWith('/id/')) {
                     // Web server root is not at '/files' directory. What to do next?
+                };
+                if (location.pathname.includes('/hash/')) {
+                    rfp_prefix = location.pathname.split('/hash/')[0];
+                }
+                if (location.pathname.includes('/id/')) {
+                    rfp_prefix = location.pathname.split('/id/')[0];
                 }
                 const the_hash_path = `${rfp_prefix}/hash/${data_obj.hash.slice(0, 2)}/${data_obj.hash}`;
                 const raw_file_path = `${the_hash_path}/raw/${data_obj.basename}`;
