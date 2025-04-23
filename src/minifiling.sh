@@ -105,7 +105,7 @@ function finish_importing() {
     ### Try hash collision
     if [[ -d "$WSPATH/files/hash/${IMPORTED_HASH:0:2}/$IMPORTED_HASH" ]]; then
         destroy_import_session
-        die 1 "[WARN] Hash collision!"
+        die 1 "[WARN] Hash collision! But you want to rebuild information, run:  minifiling.sh files/hash/${IMPORTED_HASH:0:2}/$IMPORTED_HASH/    "
     fi
     ### Generate companion stuff
     cp -a "$ITEM_METADATA_HTML_PATH" ".item_metadata.html.txt"
