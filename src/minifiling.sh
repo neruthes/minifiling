@@ -18,16 +18,19 @@ YEAR="$(TZ=UTC date +%Y)"
 TIMESTAMP="$(TZ=UTC date +%s)"
 TIME_ISO="$(TZ=UTC date -Is | cut -c1-19)Z"
 
+function load_env() {
+    [[ -e .env ]] && source .env
+}
 
 ### Default values for some stuff to be replaced by instance owners
-SITE_PREFIX="http://example.com"
-ASSETS_DIR="$SRC_REPO_PATH/assets"
-ITEM_METADATA_HTML_PATH="$ASSETS_DIR/item_metadata.html"
-CATALOG_HTML_PATH="$ASSETS_DIR/catalog.html"
-INDEX_HTML_TARGET_PATH=files/index.html
-ASSET_EVIDENCE_TEX_PATH="$ASSETS_DIR/evidence.tex"
-ASSET_EVIDENCE_TEXDEPS_PATH="$ASSETS_DIR/evidence.tex.d"
-[[ -e .env ]] && source .env
+SITE_PREFIX="http://example.com" && load_env
+ASSETS_DIR="$SRC_REPO_PATH/assets" && load_env
+ITEM_METADATA_HTML_PATH="$ASSETS_DIR/item_metadata.html" && load_env
+CATALOG_HTML_PATH="$ASSETS_DIR/catalog.html" && load_env
+INDEX_HTML_TARGET_PATH=files/index.html && load_env
+ASSET_EVIDENCE_TEX_PATH="$ASSETS_DIR/evidence.tex" && load_env
+ASSET_EVIDENCE_TEXDEPS_PATH="$ASSETS_DIR/evidence.tex.d" && load_env
+### Need a better approach to replace repeating `load_env`
 
 
 ### Real env variables...
@@ -141,9 +144,11 @@ function xelatex_make_evidence_pdf() {
     IMPORTED_HASH="$(basename "$dir2")"
     echo "dir2=$dir2"
     echo "IMPORTED_HASH=$IMPORTED_HASH"
+    cd "$WSPATH"
+    echo cp "$ASSET_EVIDENCE_TEX_PATH"  "$dir2/zzz_file_$IMPORTED_HASH.tex"
+    cp "$ASSET_EVIDENCE_TEX_PATH"  "$dir2/zzz_file_$IMPORTED_HASH.tex"
     cd "$dir2"
-    cp "$ASSET_EVIDENCE_TEX_PATH"  "zzz_file_$IMPORTED_HASH.tex"
-    cp -r "$ASSET_EVIDENCE_TEXDEPS_PATH"  evidence.tex.d
+    [[ -d "$ASSET_EVIDENCE_TEXDEPS_PATH" ]] && cp -r "$ASSET_EVIDENCE_TEXDEPS_PATH"  evidence.tex.d
     (
         printf '\\providecommand{\\METADATAhash}[0]{%s}\n'          "$(jq -r .hash metadata.json)"
         printf '\\providecommand{\\METADATAtimestamp}[0]{%s}\n'     "$(jq -r .timestamp metadata.json)"
