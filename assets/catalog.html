@@ -85,7 +85,7 @@
                 console.log(catalog_arr);
                 document.querySelector('#MainList').innerHTML = catalog_arr.map(function (data_obj) {
                     return `<div style="padding: 20px 0px; border-bottom: 1px solid #DDD; margin: 0px;">
-                        <h2><a href="./hash/${data_obj.hash.slice(0,2)}/${data_obj.hash}/">${data_obj.basename}</a></h2>
+                        <h2><a href="./hash/${data_obj.hash.slice(0,2)}/${data_obj.hash}/?t=${Date.now()}">${data_obj.basename}</a></h2>
                         <p>SHA-1 Hash: ${data_obj.hash}</p>
                         <p>Date: ${data_obj.timeiso.replace('T', ' ')}</p>
                     </div>`;

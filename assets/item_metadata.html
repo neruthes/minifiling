@@ -95,7 +95,7 @@
                 }
                 const the_hash_path = `${rfp_prefix}/hash/${data_obj.hash.slice(0, 2)}/${data_obj.hash}`;
                 const raw_file_path = `${the_hash_path}/raw/${data_obj.basename}`;
-                const evidence_pdf_path = `${the_hash_path}/file_${data_obj.hash}.pdf`;
+                const evidence_pdf_path = `${the_hash_path}/file_${data_obj.hash}.pdf?t=${Date.now()}`;
                 let dom_optional_evidence_link = ``;
                 if (data_obj.enabled_evidence_pdf) {
                     dom_optional_evidence_link = `<tr>

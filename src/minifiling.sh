@@ -186,7 +186,12 @@ function xelatex_make_evidence_pdf() {
 
 
 
-
+function multi_actions() {
+    for target in "$@"; do
+        minifiling.sh "$target"
+    done
+    exit $?
+}
 
 
 SUBCOMMAND="$1"
@@ -196,9 +201,29 @@ case "$SUBCOMMAND" in
         ;;
 
     files/hash/*/*/ )
+        if [[ -e "$2" ]]; then
+            multi_actions "$@"
+        fi
         if [[ -e "$1"metadata.json ]]; then
             xelatex_make_evidence_pdf "$(realpath "$1")"
         fi
+        ;;
+
+    files/id/*/*/ )
+        if [[ -e "$2" ]]; then
+            multi_actions "$@"
+        fi
+        timestamp_1="$(cut -d/ -f4 <<< "$1")"
+        timestamp_2="$(jq -r .timestamp "$1"metadata.json)"
+        if [[ "$timestamp_1" == "$timestamp_2" ]]; then
+            hash="$(jq -r .hash "$1"metadata.json)"
+            dir_path="files/hash/${hash:0:2}/$hash/"
+            echo "$dir_path"
+            minifiling.sh "$dir_path"
+        fi
+        # if [[ -e "$1"metadata.json ]]; then
+        #     xelatex_make_evidence_pdf "$(realpath "$1")"
+        # fi
         ;;
 
     index )
