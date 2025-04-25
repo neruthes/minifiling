@@ -115,6 +115,10 @@
                                 <td>SHA-1 Hash</td>
                                 <td>${data_obj.hash}</td>
                             </tr>
+                            <tr>
+                                <td>Date</td>
+                                <td>${data_obj.timeiso.replace('T', ' ') }</td>
+                            </tr>
                             ${dom_optional_evidence_link}
                         </tbody>
                     </table>

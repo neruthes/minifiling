@@ -164,6 +164,7 @@ function xelatex_make_evidence_pdf() {
     rm evidence-data.tex
     rm -r evidence.tex.d
     realpath "file_$IMPORTED_HASH.pdf"
+    find -name texput.log -delete
     echo "[INFO] WWW path: $SITE_PREFIX/hash/${IMPORTED_HASH:0:2}/$IMPORTED_HASH/ "
 }
 
